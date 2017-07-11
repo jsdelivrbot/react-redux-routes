@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createPost } from '../actions';
 
 class PostsNew extends Component {
 	// Helper method
@@ -30,7 +32,9 @@ class PostsNew extends Component {
 
 	onSubmit(values) {
 		// this === component
-		console.log('values', values);
+		this.props.createPost(values, () => {			// Use callback, because we have to wait until Post will be created
+			this.props.history.push('/');						// Redirect to page of posts list
+		});
 	}
 
 	render() {
@@ -82,4 +86,6 @@ function validate(values) {
 export default reduxForm({
 	validate,
 	form: 'PostsNewForm'
-})(PostsNew);
+})(
+	connect	(null, { createPost })(PostsNew)
+);
